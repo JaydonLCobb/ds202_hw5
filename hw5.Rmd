@@ -1,0 +1,61 @@
+---
+title: "Homework 5"
+author: "Jaydon Cobb | JaydonCobb"
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Liquor Sales in Iowa
+
+```{r}
+df <- readr::read_csv('2019_Iowa_Liquor_Sales.csv')
+df
+```
+
+# 2.A) 
+```{r}
+library(tidyverse)
+library(dplyr)
+df2 <- df %>% separate("Store Location", sep= "([\\?\\ ])", c(NA, "lat","long"))
+df2$long <- stringr::str_replace(df2$lat, '\\)', '')
+df2$lat <- stringr::str_replace(df2$lat, '\\(', '')
+df2
+```
+#b
+```{r}
+df2$long <- as.numeric(df2$long)
+df2$lat <- as.numeric(df2$lat)
+df2
+```
+#c
+```{r}
+df3 <- df2 %>% separate("Date", sep= "([\\/])", c("Day", "Month", "Year"))
+```
+#3.A)
+```{r}
+ggplot(df3, aes (x=`Category Name`, color=`Volume Sold (Liters)`)) + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+#b
+```{r}
+ggplot(df3, aes (x=`Category Name`, color=`Volume Sold (Liters)`)) + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+#4.A)
+```{r}
+df4 <- df3 %>% summarise("num_sales" = sum(`Bottles Sold`),"volume_liquor" = sum(`Volume Sold (Liters)`), "spent" = sum(`Sale (Dollars)`))
+df4
+```
+#5
+```{r}
+df5 <- df2 %>% group_by(Date) %>% mutate(volume_liquor = sum()) %>% ungroup()
+df5
+```
+# Sales increase exponentially on the weekend
+
+
+
+
+
